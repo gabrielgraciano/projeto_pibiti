@@ -15,6 +15,7 @@ source('print_glossario.R')
 source('questionario.R')
 source('perguntas_pibiti.R')
 
+
 navbarPage("GARU", id = "mainNav",
            tabPanel("Início", inicio ,icon = icon("home", lib = "font-awesome")),
            navbarMenu("Descritiva",
@@ -46,15 +47,28 @@ navbarPage("GARU", id = "mainNav",
                       tabPanel("Teste qui quadrado", teste_qui, value="tabTesteQui"),
                       tabPanel("Teste de Correlação", teste_corr, value = "tabTesteCor r"),
                       icon = icon("area-chart", lib="font-awesome")),
-           navbarMenu("Glossário",
-                      tabPanel('Glossário', glossario, value = 'tabGlossario'),
-                      icon = icon('font', lib='font-awesome')),
+           tabPanel("Glossário", glossario, icon = icon('font', lib='font-awesome'),
+                    tags$head(tags$script(HTML('
+      var fakeClick = function(tabName) {
+        var dropdownList = document.getElementsByTagName("a");
+        for (var i = 0; i < dropdownList.length; i++) {
+          var link = dropdownList[i];
+          if(link.getAttribute("data-value") == tabName) {
+            link.click();
+          };
+        }
+      };
+    ')))),
            navbarMenu('Exercícios',
                       tabPanel('Questionário', questionario, value = 'tabQuestionario'),
                       icon = icon('pencil', lib='font-awesome')),
+           
+          
 )
            
-
+#navbarMenu("Glosssário",
+           #tabPanel('Glossário', glossario, value = 'tabGlossario'),
+           #icon = icon('font', lib='font-awesome')),
 
 
 #tabPanel('Glossário', glossario, value = 'tabGlossario'),
