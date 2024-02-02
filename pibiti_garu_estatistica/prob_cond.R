@@ -24,7 +24,8 @@ prob_cond <- fluidPage(
   ),
   column(6,
          h4(strong("Cálculo")),
-         verbatimTextOutput("caixaContaProbCond")
+         verbatimTextOutput("caixaContaProbCond"),
+         p(HTML("A fórmula da <a style='color: blue; text-decoration: underline; cursor: pointer;' onclick='fakeClick(\"Glossário\")'>média</a>"))
   )
   )
   
