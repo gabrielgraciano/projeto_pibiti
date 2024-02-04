@@ -14,6 +14,7 @@ source("geometry.R")
 source('print_glossario.R')
 source('questionario.R')
 source('perguntas_pibiti.R')
+source('unifesp.R')
 
 
 navbarPage("GARU", id = "mainNav",
@@ -62,6 +63,7 @@ navbarPage("GARU", id = "mainNav",
            navbarMenu('Exercícios',
                       tabPanel('Questionário', questionario, value = 'tabQuestionario'),
                       icon = icon('pencil', lib='font-awesome')),
+           tabPanel("Unifesp", unifesp)
            
           
 )
