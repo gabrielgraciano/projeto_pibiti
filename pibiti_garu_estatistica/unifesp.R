@@ -7,9 +7,9 @@ unifesp <-
 
 library(readr)
 dados_discentes <- read_csv("data/dados-unifesp-discentes-2023/X2023_unifesp_dados_socioeconomicos.csv")
-View(X2023_unifesp_dados_socioeconomicos)
 
-glimpse(dados_discentes)
+dados_discentes <- dados_discentes[,-6]
+
 
 summary(dados_discentes)
 mode <- function(x) {
