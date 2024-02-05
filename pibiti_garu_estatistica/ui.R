@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyjs)
 
 source("data_handling.R")
 source("inicio.R")

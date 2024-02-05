@@ -2296,7 +2296,7 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                 shinyjs::toggle('confirmar_resposta', condition = botao())
               })
               
-            
+              
               
               #linkTexts
               
@@ -2342,4 +2342,24 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
               })
               
               
+              
+              output$barras_unifesp <- renderPlot({
+                if (is.factor(dados_discentes_f[[input$var_qualitativa]])) {
+                  barplot(table(dados_discentes_f[[input$var_qualitativa]]), main = paste("Gráfico de Barras -", input$var_qualitativa))
+                }
+              }
+              )
+              
+              output$pizza_unifesp <- renderPlot({
+                if (is.factor(dados_discentes_f[[input$var_qualitativa]])) {
+                  pie(table(dados_discentes_f[[input$var_qualitativa]]), main = paste("Gráfico de Barras -", input$var_qualitativa))
+                }
+              }
+              )
+              
             }
+            
+           
+           
+          
+            
