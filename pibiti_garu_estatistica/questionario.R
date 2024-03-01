@@ -4,6 +4,10 @@ questionario <-
   tabPanel('Questionário',
            fluidPage(
              titlePanel('Questionário'),
+             sidebarLayout(
+               sidebarPanel(
+                 titlePanel(h3('Exercícios'))
+               ),
              mainPanel(
                uiOutput('pergunta'),
                uiOutput('opcoes_resposta'),
@@ -13,5 +17,7 @@ questionario <-
              )
            )
   )
+  )
+
 
 
