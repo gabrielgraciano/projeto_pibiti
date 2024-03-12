@@ -1,5 +1,8 @@
 counter_ex9 <- 0
-paralisia <-
+useShinyjs()
+paralisia <- fluidPage(
+  fluidRow(
+    HTML('<center><img src="images/garu_3.png"></center>')),
   sidebarLayout(
     sidebarPanel(
       selectInput('exercicio_pc','Escolha o exercício a ser resolvido', choices = 1:12 ),
@@ -36,9 +39,16 @@ paralisia <-
       uiOutput('opcoes_exercicio_pc'),
       actionButton('gerar_pc', 'Gerar'),
       plotOutput('grafico_pc'),
-      DTOutput('tabela_pc')
+      gt_output('tabela_ex1'),
+      gt_output('plot_ex6')
+      
     )
   )
+)
+  
+
+
+
 
 
 

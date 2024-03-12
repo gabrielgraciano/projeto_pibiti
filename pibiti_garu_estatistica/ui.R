@@ -70,12 +70,12 @@ navbarPage("GARU", id = "mainNav",
            navbarMenu('Exercícios Práticos',
                       tabPanel('Dados - Paralisia Cerebral', paralisia, value = 'tabParalisia'))
            
-          
-)
            
+)
+
 #navbarMenu("Glosssário",
-           #tabPanel('Glossário', glossario, value = 'tabGlossario'),
-           #icon = icon('font', lib='font-awesome')),
+#tabPanel('Glossário', glossario, value = 'tabGlossario'),
+#icon = icon('font', lib='font-awesome')),
 
 
 #tabPanel('Glossário', glossario, value = 'tabGlossario'),

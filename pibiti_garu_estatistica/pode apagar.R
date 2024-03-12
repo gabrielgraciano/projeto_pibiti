@@ -384,45 +384,8 @@ output$grafico_pc <- renderPlot({
 
 
 
-
 library(DT)
-
-class(dados_paralisia$sexo)
-# Verificar o tipo de cada variável
-tipos_variaveis <- sapply(dados_paralisia, class)
-
-# Variáveis qualitativas
-var_qualitativas <- names(tipos_variaveis[tipos_variaveis == "factor"])
-
-# Variáveis quantitativas
-var_quantitativas <- names(tipos_variaveis[tipos_variaveis %in% c("numeric", "integer")])
-
-# Medidas resumo para variáveis qualitativas
-medidas_qualitativas <- sapply(dados_paralisia[var_qualitativas], function(x) {
-  n <- length(x)
-  proporcao <- table(x) / n
-  proporcao <- round(proporcao * 100, 2)
-  resumo <- paste("n =", n, "<br />", "Porcentagem:<br />", paste(proporcao, "%", collapse = ", "), "<br />")
-  return(resumo)
-})
-
-# Medidas resumo para variáveis quantitativas
-medidas_quantitativas <- sapply(dados_paralisia[var_quantitativas], function(x) {
-  media <- mean(x, na.rm = TRUE)
-  desvio_padrao <- sd(x, na.rm = TRUE)
-  resumo <- paste("Média =", round(media, 2), "<br />", "Desvio Padrão =", round(desvio_padrao, 2), "<br />")
-  return(resumo)
-})
-
-# Criar a tabela DT
-tabela_medidas_resumo <- cbind(n = sapply(dados_paralisia, length), 
-                               qualitativas = medidas_qualitativas,
-                               quantitativas = medidas_quantitativas)
-
-# Exibir a tabela DT
-datatable(tabela_medidas_resumo, escape = FALSE, options = list(dom = 't', paging = FALSE))
+library(dplyr)
 
 
-
-
-
+all_co

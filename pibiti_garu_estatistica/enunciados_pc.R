@@ -15,10 +15,10 @@ enunciados_pc <- list(
   (líquidos, pastosos e sólidos) segundo o grupo de crianças. Apresente os resultados
   em uma única tabela.",
   
-  "6" = "Cruze a perda auditiva com o grupo de crianças e dê os resultados em uma tabela.
-  Há indícios de que a perda auditiva esteja associada à PC?
-Verifique sua observação com um teste estatístico apropriado e nível de significância de 5%.",
-  
+  "6" = "Observe a tabela de perda auditiva por grupo de crianças.
+  Há indícios de que a perda auditiva esteja associada à PC? Qual é o teste estatístico
+  mais apropriado para verificar essa associação?",
+
   "7" = "Cruze os distúrbios de comunicação com o grupo de crianças e dê os resultados
   em uma tabela. Há indícios de que os distúrbios de comunicação estejam associados à PC? 
 Verifique sua observação com um teste estatístico apropriado e nível de significância de 5%.",
@@ -57,10 +57,56 @@ respostas_esperadas_pc <- list(
   ex2 = list(variavel_pc_x = 'dmo', variavel_pc_y = "", tipo_grafico_pc = 'Barras'),
   ex3 = list(variavel_pc_x = 'dist_comun', variavel_pc_y = "", tipo_grafico_pc = 'Barras'),
   ex4 = list(variavel_pc_x = "", variavel_pc_y = 'td_liquido', tipo_grafico_pc = 'Boxplot'),
+  ex5 = list(medidas_resumo_ex5 = c('Média', 'Desvio-Padrão')),
+  ex6 = list(hipotese_ex6 = 'Sim', teste_ex6 = 'Teste Qui-quadrado de Pearson'),
+  ex7 = list(hipotese_ex7 = 'Sim', teste_ex7 = 'Teste Qui-quadrado de Pearson'),
   ex8 = list(variavel_pc_x = 'grupo', variavel_pc_y = 'td_liquido', tipo_grafico_pc = 'Boxplot'),
   ex9 = list(variavel_pc_x = 'grupo', variavel_pc_y = 'td_pastoso', tipo_grafico_pc = 'Boxplot'),
   ex10 = list(variavel_pc_x = 'grupo', variavel_pc_y = 'td_solido', tipo_grafico_pc = 'Boxplot'),
   ex11 = list(variavel_pc_x = 'td_solido', variavel_pc_y = 'td_liquido', tipo_grafico_pc = 'Dispersão'),
   ex12 = list(variavel_pc_x = 'td_pastoso', variavel_pc_y = 'td_liquido', tipo_grafico_pc = 'Dispersão')
 )
+
+plot_ex6 <- 
+  dados_paralisia%>%
+  select(perda_audit, grupo)%>%
+  tbl_summary(
+    by = 'grupo',
+    missing = 'no',
+    digits = 
+      list(all_continuous() ~ 1,
+           all_categorical() ~ c(0,2)),
+    label = list(
+      grupo ~ 'Grupo de crianças por condição de saúde',
+      perda_audit ~ 
+        'Perda auditiva'))%>%
+  modify_header(label = '**Variável**')%>%
+  modify_footnote(update = starts_with('stat_') ~ 'n (%):
+  frequências absolutas e relativa')
+
+plot_ex6 <-
+  plot_ex6%>%
+  as_gt()
+
+
+plot_ex7 <-
+  dados_paralisia%>%
+  select(dist_comun, grupo)%>%
+  tbl_summary(
+    by = 'grupo',
+    missing = 'no',
+    digits = 
+      list(all_continuous() ~ 1,
+           all_categorical() ~ c(0,2)),
+    label = list(
+      grupo ~ 'Grupo de crianças por condição de saúde',
+      dist_comun ~ 
+        'Distúrbios de Comunicação'))%>%
+  modify_header(label = '**Variável**')%>%
+  modify_footnote(update = starts_with('stat_') ~ 'n (%):
+  frequências absolutas e relativa')
+
+plot_ex7 <-
+  plot_ex7%>%
+  as_gt()
 

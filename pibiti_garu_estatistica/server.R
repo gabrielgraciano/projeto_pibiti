@@ -2217,6 +2217,8 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
               feedback <- reactiveVal(NULL)
               counter <- reactiveVal(0)
               botao <- reactiveVal(T)
+              acertos <- reactiveVal(0)
+              erros <- reactiveVal(0)
               
               #pergunta
               
@@ -2246,9 +2248,11 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                   resposta_correta <- pergunta$resposta_correta
                   if (input$resposta == pergunta$respostas[resposta_correta]) {
                     feedback('Resposta Correta.')
+                    acertos(acertos() + 1)
                     counter(counter() + 1)
                   } else {
                     feedback('Resposta Incorreta.')
+                    erros(erros() + 1)
                   }
                   
                   pergunta_atual(pergunta_atual() + 1)
@@ -2260,6 +2264,19 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                   botao(F)
                 }
               })
+              
+              #counter de questõoes erradas e certas
+              output$score <- render_gt({
+                data <- data.frame(
+                  Categoria = c("Acertos", "Erros"),
+                  Quantidade = c(acertos(), erros())
+                )
+                
+                data %>%
+                  gt() %>%
+                  tab_header(title = "Score")
+              })
+              
               
               #printar resultado
               
@@ -2388,6 +2405,62 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                     )
                   }
                   
+                  else if (numero_exercicio == 5) {
+                    fluidRow(
+                      column(6,
+                             p(HTML(enunciado))
+                      ),
+                      column(6,
+                             h3('Seleção de variáveis'),
+                             
+                             pickerInput('medidas_resumo_ex5', 'Quais são as medidas-resumo adequadas?',
+                                         choices = c('Média', 'Desvio-Padrão','Moda', 'Frequência relativa'), multiple = TRUE)
+                             
+                             
+                      )
+                    )
+                  }
+                  
+                  else if (numero_exercicio == 6) {
+                    fluidRow(
+                      column(6,
+                             p(HTML(enunciado)),
+                             render_gt(plot_ex6)
+                      ),
+                      column(6,
+                             h3('Seleção de variáveis'),
+                             
+                             pickerInput('teste_ex6', 'Qual seria o  teste estatístico mais adequado para verificação da hipótese?',
+                                         choices = c('Teste t de Student', 'Teste Qui-quadrado de Pearson', 'ANOVA')),
+                             uiOutput("hipotese_ui_6"),
+                             verbatimTextOutput('resultado_teste_ex_6'),
+                             actionButton('calcular_teste', 'Calcular')
+
+                             
+                      )
+                    )
+                  }
+                  
+                  else if (numero_exercicio == 7) {
+                    fluidRow(
+                      column(6,
+                             p(HTML(enunciado)),
+                             render_gt(plot_ex7)
+                      ),
+                      column(6,
+                             h3('Seleção de variáveis'),
+                             
+                             pickerInput('teste_ex7', 'Qual seria o  teste estatístico mais adequado para verificação da hipótese?',
+                                         choices = c('Teste t de Student', 'Teste Qui-quadrado de Pearson', 'ANOVA')),
+                             uiOutput("hipotese_ui_7"),
+                             verbatimTextOutput('resultado_teste_ex_7'),
+                             actionButton('calcular_teste', 'Calcular')
+                             
+                             
+                      )
+                    )
+                  }
+                  
                   else {
                     fluidRow(
                       column(12,
@@ -2400,6 +2473,42 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                 }
               }
               
+              output$hipotese_ui_6 <- renderUI({
+                if(input$teste_ex6 == 'Teste Qui-quadrado de Pearson' && input$calcular_teste > 0 && length(calculo_teste()) == 0) {
+                  pickerInput('hipotese_ex6', 'A perda auditiva está associada à Paralisia Cerebral?',
+                              choices = c('Sim', 'Não'), selected = 'Sim')
+                }
+                
+                else {
+                  NULL
+                }
+              })
+              
+              output$hipotese_ui_7 <- renderUI({
+                if(input$teste_ex7 == 'Teste Qui-quadrado de Pearson' && input$calcular_teste > 0 && length(calculo_teste()) == 0) {
+                  pickerInput('hipotese_ex7', 'A perda auditiva está associada à Paralisia Cerebral?',
+                              choices = c('Sim', 'Não'), selected = 'Sim')
+                }
+                else {
+                  NULL
+                }
+              })
+                
+              
+              output$resultado_teste_ex_6 <- renderPrint({
+                if(input$teste_ex6 == 'Teste Qui-quadrado de Pearson' && input$calcular_teste > 0 && length(calculo_teste()) == 0) {
+                  chisq.test(dados_paralisia$perda_audit, dados_paralisia$grupo)
+                }
+              })
+              
+              output$resultado_teste_ex_7 <- renderPrint({
+                if(input$teste_ex7 == 'Teste Qui-quadrado de Pearson' && input$calcular_teste > 0 && length(calculo_teste()) == 0) {
+                  chisq.test(dados_paralisia$dist_comun, dados_paralisia$grupo)
+                }
+              })
+
+              
+              
               # Plotar UI
               output$opcoes_exercicio_pc <- renderUI({
                 exercicio_selecionado <- input$exercicio_pc
@@ -2410,7 +2519,6 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                 msgs_erro <- character(0)
                 
                 print(input$exercicio_pc)
-                
                 req(!is.null(input$exercicio_pc))  
                 
                 # Verificar se as variáveis estão sendo definidas corretamente
@@ -2454,7 +2562,7 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                   print(input$variavel_quanti)
                   print(input$medidas_resumo_quali)
                   print(input$medidas_resumo_quanti)
-                  
+
                   
                     if (!identical(input$variavel_quali, resposta_esperada$variavel_quali)) {
                       msgs_erro <- c(msgs_erro, "Não foram selecionadas todas as variáveis categóricas")
@@ -2476,7 +2584,38 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                       msgs_erro <- c(msgs_erro, "Essa não é a medida resumo adequada para variáveis contínuas")
                   }
                 }
+                
+                else if (input$exercicio_pc == 5){
+                  ex <- input$exercicio_pc
+                  resposta_esperada <- respostas_esperadas_pc[[paste0("ex", ex)]]
                   
+                  
+                  if (!identical(input$medidas_resumo_ex5, resposta_esperada$medidas_resumo_ex5)) {
+                    msgs_erro <- c(msgs_erro, "Não foram selecionadas somente as medidas-resumo adequadas")
+                  }
+                  
+                  
+                  
+                }
+                
+                else if (input$exercicio_pc == 6){
+                  ex <- input$exercicio_pc
+                  resposta_esperada <- respostas_esperadas_pc[[paste0("ex", ex)]]
+                  
+                  if(!identical(input$hipotese_ex6, resposta_esperada$hipotese_ex6)){
+                    msgs_erro <- c(msgs_erro, 'Essa não é a conclusão correta')
+                  }
+                }
+                
+                else if (input$exercicio_pc == 7){
+                  ex <- input$exercicio_pc
+                  resposta_esperada <- respostas_esperadas_pc[[paste0("ex", ex)]]
+                  
+                  if(!identical(input$hipotese_ex7, resposta_esperada$hipotese_ex7)){
+                    msgs_erro <- c(msgs_erro, 'Essa não é a conclusão correta')
+                  }
+                }
+
                 
                 else if (length(msgs_erro) > 0) {
                   return(msgs_erro)
@@ -2492,6 +2631,38 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                   shinyalert(title = "Erro!", text = validar_opcoes_ex(), type = "error")
                 }
               })
+              
+              
+              # Renderizar testes estatísticos
+              calculo_teste <- reactive({
+                msgs_erro_teste <- character(0)
+                req(!is.null(input$exercicio_pc))
+                
+                if(input$exercicio_pc == 6){
+                  ex <- input$exercicio_pc
+                  resposta_esperada <- respostas_esperadas_pc[[paste0("ex", ex)]]
+                  if (!identical(input$teste_ex6, resposta_esperada$teste_ex6)) {
+                    msgs_erro <- c(msgs_erro_teste, "Este não é o teste adequado")
+                  }
+                }
+                
+                if(input$exercicio_pc == 7){
+                  ex <- input$exercicio_pc
+                  resposta_esperada <- respostas_esperadas_pc[[paste0("ex", ex)]]
+                  if (!identical(input$teste_ex7, resposta_esperada$teste_ex7)) {
+                    msgs_erro <- c(msgs_erro_teste, "Este não é o teste adequado")
+                  }
+                }
+                
+              })
+                
+              observeEvent(input$calcular_teste, {
+                if(!is.null(calculo_teste())){
+                  shinyalert(title = 'Erro!', text = calculo_teste(), type = 'error')
+                }
+              })
+              
+              
               
               output$grafico_pc <- renderPlot({
                 
@@ -2561,14 +2732,13 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
               })
                 
               
-            output$tabela_pc <- renderDT({
+            output$tabela_ex1 <- render_gt({
               
               if ( is.null(validar_opcoes_ex())) {
                 exercicio_selecionado <- input$exercicio_pc
                 resposta_esperada <- respostas_esperadas_pc[[paste0("ex", exercicio_selecionado)]]
                 
                 if(exercicio_selecionado == 1){
-                  
                   
                   plot <- dados_paralisia%>%
                     tbl_summary(
@@ -2580,12 +2750,44 @@ medidas resumo, e construção de histogramas e boxplots, para a variável quant
                                        
                                        all_categorical() ~ "{n} ({p}%)")
                     ) %>%
+                    
                     modify_header(label = '**Variável')%>%
                     modify_footnote(update = starts_with('stat_') ~ 'Média (desvio-padrão) para variáveis
                       numéricas; n (%) para variáveis categóricas')
+                  plot <- plot%>%
+                    
+                    as_gt()
+                  
                   return(plot)
                 }
-              }
+                
+                if (exercicio_selecionado == 5){
+                  
+                  plot <- dados_paralisia%>%
+                    select(td_liquido, td_pastoso, td_solido, grupo)%>%
+                    tbl_summary(
+                      by = 'grupo',
+                      missing = 'no',
+                      digits = 
+                        list(all_continuous() ~ 1,
+                             all_categorical() ~ c(0,2)),
+                      statistic = 
+                        list(all_continuous() ~ "{mean} ({sd})",
+                             all_categorical() ~ "{n} ({p})%")
+                    )%>%
+                    
+                    modify_header(label = '**Variável**')%>%
+                    modify_footnote(update = starts_with('stat_') ~ 'Média (desvio-padrão) para')
+                  plot <- plot %>%
+                    
+                    as_gt()
+                  
+                  return(plot)
+                    
+                }
+                
+                }
+              
             })
             
               

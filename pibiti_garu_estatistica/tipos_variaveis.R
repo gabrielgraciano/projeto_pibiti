@@ -38,7 +38,7 @@ suas possíveis realizações, e as variáveis
            
            imageOutput("imagemTiposVariaveis")
            #HTML('<center><img src="images/tipos_variaveis.png" filetype="image/png" width="400"></center>')
-           ),
+    ),
     column(6, 
            h4("Tabela com variáveis exemplo"),
            tableOutput("tabelaExemploVariaveis"))
@@ -50,3 +50,5 @@ suas possíveis realizações, e as variáveis
   
   
 )
+              
+  

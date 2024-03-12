@@ -6,18 +6,16 @@ questionario <-
              titlePanel('Questionário'),
              sidebarLayout(
                sidebarPanel(
-                 titlePanel(h3('Exercícios'))
+                 uiOutput('pergunta'),
+                 uiOutput('opcoes_resposta'),
+                 useShinyjs(),
+                 actionButton('confirmar_resposta','Verificar'),
+                 textOutput('resultado')
                ),
-             mainPanel(
-               uiOutput('pergunta'),
-               uiOutput('opcoes_resposta'),
-               useShinyjs(),
-               actionButton('confirmar_resposta', 'Verificar'),
-               textOutput('resultado'),
+               mainPanel(
+                 gt_output('score')
+                 
+               )
              )
            )
   )
-  )
-
-
-
